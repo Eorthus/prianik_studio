@@ -1,5 +1,6 @@
-import { useRuntimeConfig } from "nuxt/app";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
+
+const baseUrl = "https://prianik.com";
 
 export interface SeoMetaOptions {
   title?: string;
@@ -95,18 +96,18 @@ export function getPageDescription(
 // Чистая функция для получения URL изображения
 export function getPageImage(locale: string, customImage?: string): string {
   if (customImage) return customImage;
-  return `../assets/img/prianik_og.png`;
+
   // Правильный путь к изображению в зависимости от языка
-  // switch(locale) {
-  //   case 'es':
-  //     return `../assets/img/prianik_og.png`;
-  //   case 'en':
-  //     return `../assets/img/prianik_og.png`;
-  //   case 'ru':
-  //     return `../assets/img/prianik_og.png`;
-  //   default:
-  //     return `../assets/img/prianik_og.png`;
-  // }
+  switch(locale) {
+    case 'es':
+      return `${baseUrl}/prianik_og.png`;
+    case 'en':
+      return `${baseUrl}/prianik_og.png`;
+    case 'ru':
+      return `${baseUrl}/prianik_og.png`;
+    default:
+      return `${baseUrl}/prianik_og.png`;
+  }
 }
 
 // Чистая функция для получения URL страницы
@@ -114,8 +115,7 @@ export function getPageUrl(
   route: RouteLocationNormalizedLoaded,
   customUrl?: string
 ): string {
-  const API_BASE_URL = useRuntimeConfig().public.apiBaseUrl;
-  return customUrl || `${API_BASE_URL}${route.fullPath}`;
+  return customUrl || `${baseUrl}${route.fullPath}`;
 }
 
 // Функция для создания альтернативных языковых ссылок
@@ -123,7 +123,6 @@ export function getAlternateLinks(
   route: RouteLocationNormalizedLoaded,
   currentLocale: string
 ): Array<{ rel: string; hrefLang: string; href: string }> {
-  const API_BASE_URL = useRuntimeConfig().public.apiBaseUrl;
   const locales = ["es", "en", "ru"];
   const defaultLocale = "es";
 
@@ -158,7 +157,7 @@ export function getAlternateLinks(
     return {
       rel: "alternate",
       hrefLang: locale,
-      href: `${API_BASE_URL}${path}`,
+      href: `${baseUrl}${path}`,
     };
   });
 }

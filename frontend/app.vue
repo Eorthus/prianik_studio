@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
 import { useHead, useSeoMeta } from "nuxt/app";
 import { getSeoMetadata } from "~/shared/useSeo";
 import { ref, watch, onMounted, computed } from "vue";
@@ -17,6 +16,7 @@ const { getCategories, isLoading } = useApiService();
 
 const { categories } = useCategories();
 
+//@ts-expect-error type
 const { t, locale } = useI18n();
 
 const loadCategories = async () => {
@@ -42,7 +42,10 @@ const seoData = ref(getSeoMetadata(route, t, locale.value));
 
 // Функция обновления SEO метаданных
 function updateSeoMetadata() {
+  console.log('Текущая локаль:', locale.value);
+  console.log('Текущий маршрут:', route.fullPath);
   seoData.value = getSeoMetadata(route, t, locale.value);
+  console.log('Сгенерированные метаданные:', seoData.value);
 }
 
 // Устанавливаем SEO-метатеги с использованием реактивного объекта

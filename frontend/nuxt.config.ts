@@ -24,11 +24,11 @@ export default defineNuxtConfig({
         file: "ru.json",
       },
     ],
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: "i18n_redirected",
-      redirectOn: "root"
-    },
+    // detectBrowserLanguage: {
+    //   useCookie: true,
+    //   cookieKey: "i18n_redirected",
+    //   redirectOn: "root"
+    // },
   },
 
   app: {
@@ -78,7 +78,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       //@ts-expect-error
-      enabled: false,
+      enabled: false
     }
   },
 
