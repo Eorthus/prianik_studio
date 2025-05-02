@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Запрещаем индексацию административных страниц
+Disallow: /admin/
+
+# Карта сайта
+Sitemap: https://creality-workshop.com/sitemap.xml

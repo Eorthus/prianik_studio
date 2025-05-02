@@ -1,0 +1,193 @@
+{
+  "header": {
+    "catalog": "Catálogo",
+    "gallery": "Galería",
+    "contacts": "Contactos",
+    "cart": "Carrito",
+    "menu": "Menú",
+    "close": "Cerrar menú"
+  },
+  "meta": {
+    "home": "Página Principal | Prianik Studio",
+    "catalog": "Catálogo de Productos | Prianik Studio",
+    "gallery": "Galería de Trabajos | Prianik Studio",
+    "contacts": "Contactos | Prianik Studio",
+    "cart": "Carrito de Compras | Prianik Studio",
+    "description": {
+      "home": "Prianik Studio ofrece servicios de grabado láser e impresión 3D de cualquier complejidad. Creación de productos y souvenirs únicos basados en tu diseño.",
+      "catalog": "Amplia gama de productos artesanales: artículos con grabado láser en madera y metal, modelos impresos en 3D y souvenirs personalizados.",
+      "gallery": "Galería de trabajos de nuestro taller: ejemplos de productos con grabado láser e impresión 3D. Evalúa la calidad de nuestros productos.",
+      "contacts": "Contáctanos para pedir souvenirs y productos personalizados. Prianik Studio opera en Moscú con entrega en toda Rusia.",
+      "cart": "Pedido y compra de productos en Prianik Studio. Entrega en toda Rusia, enfoque individual para cada pedido.",
+      "product": "Descripción detallada, especificaciones y fotos del producto. Pedido y entrega desde Prianik Studio."
+    }
+  },
+  "notification": {
+    "custom_idea": "Podemos realizar tu idea personalizada, impresión o diseño - contáctanos",
+    "close": "Cerrar"
+  },
+  "home": {
+    "title": "Prianik Studio",
+    "subtitle": "Grabado láser e impresión 3D de cualquier complejidad. Convertimos tus ideas en productos únicos.",
+    "go_to_catalog": "Ir al catálogo",
+    "about_us": "Sobre nosotros",
+    "about_text1": "Somos un equipo de artesanos que trabaja con equipos modernos de Creality. Nuestro taller ofrece servicios de grabado láser e impresión 3D de alta calidad.",
+    "about_text2": "Usando el grabador Creality Laser Falcon, creamos artículos únicos en madera, metal y otros materiales. Y con la ayuda de una impresora 3D, damos vida a cualquier objeto tridimensional.",
+    "about_text3": "Participamos en eventos y ferias, presentando nuestros productos, y siempre estamos felices de cumplir pedidos individuales basados en tus bocetos o ideas.",
+    "contact_us": "Contáctanos",
+    "discover_products": "Descubrir productos",
+    "our_categories": "Nuestras categorías",
+    "categories": {
+      "3d_description": "Creamos productos y modelos volumétricos de cualquier complejidad",
+      "engraving_description": "Patrones e inscripciones únicas en diversos materiales",
+      "wood_description": "Productos de madera",
+      "metal_description": "Productos de metal",
+      "other_description": "Otros"
+    },
+    "view_all_gallery": "Ver galería completa"
+  },
+  "order_form": {
+  "notification_title": "Cómo procesamos los pedidos",
+  "notification_text": "Complete el formulario a continuación y nos pondremos en contacto con usted dentro de un día hábil para discutir los detalles. Responderemos todas sus preguntas y le ayudaremos a encontrar la solución óptima."
+  },
+  "catalog": {
+    "title": "Catálogo de productos",
+    "categories": {
+      "engraving": "Grabado",
+      "3d-printing": "Impresión 3D"
+    },
+    "subcategories": {
+      "wood": "Madera",
+      "metal": "Metal",
+      "other": "Otro"
+    },
+    "show_categories": "Mostrar categorías",
+    "hide_categories": "Ocultar categorías",
+    "found_items": "Productos encontrados:",
+    "search_placeholder": "Introduce el nombre...",
+    "no_results": "No se encontraron resultados para tu búsqueda. Intenta cambiar los parámetros del filtro.",
+    "reset_filters": "Restablecer filtros",
+    "sort_by_price": "Ordenar por precio"
+  },
+  "product": {
+    "main": "Principal",
+    "catalog": "Catálogo",
+    "characteristics": "Características",
+    "material": "Material",
+    "weight": "Peso",
+    "dimensions": "Tamaño",
+    "color": "Color",
+    "quantity": "Cantidad",
+    "add_to_cart": "Añadir al carrito",
+    "buy_now": "Comprar ahora",
+    "similar_products": "Productos similares",
+    "order_title": "Finalizar pedido"
+  },
+  "cart": {
+    "title": "Carrito",
+    "empty_cart": "Tu carrito está vacío",
+    "add_items": "Añade productos al carrito para continuar comprando",
+    "go_to_catalog": "Ir al catálogo",
+    "order_info": "Información del pedido",
+    "your_order": "Tu pedido",
+    "items": "Productos",
+    "delivery": "Entrega",
+    "delivery_cost": "A determinar",
+    "total": "Total",
+    "checkout": "Finalizar compra",
+    "comment": "Comentario",
+    "comment_placeholder": "Especifica detalles adicionales",
+    "error": {
+      "empty_cart": "El carrito está vacío. Agrega productos antes de finalizar la compra.",
+      "general": "Ocurrió un error al procesar tu pedido. Por favor, inténtalo de nuevo más tarde.",
+      "order_not_created": "No se pudo crear el pedido. Verifica tu información e inténtalo de nuevo."
+    },
+    "order_success": "¡Pedido realizado con éxito!",
+    "processing_order": "Procesando pedido..."
+  },
+  "contacts": {
+    "title": "Contactos",
+    "our_contacts": "Nuestros contactos",
+    "company_name": "Prianik Studio",
+    "company_address": "Quesada y Poás, Costa Rica",
+    "company_phone": "+506 8415 4807",
+    "company_email_prefix": "info",
+    "company_email_domain": "creality-workshop.com",
+    "company_hours": "Lun-Vie: 10:00-19:00, Sáb: 11:00-17:00",
+    "phone": "Teléfono",
+    "email": "Email",
+    "work_hours": "Horario de trabajo",
+    "social_media": "Nuestras redes sociales",
+    "contact_us": "Contáctanos",
+    "faq_title": "Preguntas frecuentes",
+    "faq": {
+      "custom_order": {
+        "question": "¿Cómo hago un pedido personalizado?",
+        "answer": "Para hacer un pedido personalizado, puedes contactarnos por teléfono, correo electrónico o completar el formulario de contacto en el sitio web. Indica tus deseos y requisitos, y discutiremos todos los detalles de tu proyecto."
+      },
+      "production_time": {
+        "question": "¿Cuánto tiempo lleva la producción?",
+        "answer": "El tiempo de producción depende de la complejidad y el volumen del pedido. Los pedidos estándar suelen tardar de 1 a 3 días hábiles. Los proyectos más complejos pueden requerir más tiempo. Te informaremos del plazo exacto después de discutir los detalles de tu pedido."
+      },
+      "delivery": {
+        "question": "¿Es posible la entrega del pedido?",
+        "answer": "Sí, entregamos pedidos en toda Rusia. El costo y el tiempo de entrega dependen de la región y el método de entrega elegido. También puedes recoger tu pedido en nuestro taller."
+      },
+      "materials": {
+        "question": "¿Qué materiales utilizan?",
+        "answer": "Para el grabado láser, utilizamos varios materiales, incluyendo diferentes tipos de madera, metal, cuero, acrílico y otros. Para la impresión 3D, utilizamos plásticos de calidad PLA, ABS, PETG y otros materiales según los requisitos del producto."
+      }
+    }
+  },
+  "gallery": {
+    "title": "Galería"
+  },
+  "form": {
+    "name": "Nombre completo",
+    "name_placeholder": "Juan Pérez",
+    "email": "Email",
+    "email_placeholder": "Tu email",
+    "phone": "Teléfono",
+    "phone_placeholder": "+34 (___) ___-___",
+    "message": "Mensaje",
+    "message_placeholder": "Describe tu solicitud o idea...",
+    "submit": "Enviar",
+    "sending": "Enviando...",
+    "success_title": "¡Mensaje enviado!",
+    "success_message": "Gracias por contactarnos. Te responderemos dentro de un día hábil.",
+    "error_title": "Error",
+    "error": {
+      "name_required": "Por favor, ingresa tu nombre",
+      "email_required": "Por favor, ingresa tu email",
+      "email_invalid": "Por favor, ingresa un email válido",
+      "phone_required": "Por favor, ingresa tu número de teléfono",
+      "phone_invalid": "Por favor, ingresa un número de teléfono válido",
+      "message_required": "Por favor, ingresa un mensaje",
+      "general": "Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo más tarde.",
+      "recaptcha_required": "Por favor, verifica que no eres un robot",
+      "recaptcha_expired": "La verificación ha caducado. Por favor, verifica de nuevo",
+      "recaptcha_error": "Se produjo un error durante la verificación. Por favor, inténtalo de nuevo"
+    },
+    "verify_captcha": "Verificación",
+    "captcha_explanation": "Por favor, verifica que no eres un robot para continuar",
+    "verify": "Verificar",
+    "cancel": "Cancelar"
+  },
+  "image_viewer": {
+    "close": "Cerrar",
+    "prev_image": "Imagen anterior",
+    "next_image": "Siguiente imagen",
+    "image_of": "Viendo imagen {current} de {total}"
+  },
+  "slider": {
+    "prev_slide": "Diapositiva anterior",
+    "next_slide": "Siguiente diapositiva"
+  },
+  "footer": {
+    "company": "© 2025 Prianik Studio",
+    "all_rights": "Todos los derechos reservados",
+    "legal_entity": "Empresario Individual Ivanov I.I.",
+    "legal_id": "Número de registro",
+    "working_hours_short": "10:00-19:00, Lun-Vie"
+  }
+}

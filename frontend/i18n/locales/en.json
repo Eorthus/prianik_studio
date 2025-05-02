@@ -1,0 +1,193 @@
+{
+  "header": {
+    "catalog": "Catalog",
+    "gallery": "Gallery",
+    "contacts": "Contacts",
+    "cart": "Cart",
+    "menu": "Menu",
+    "close": "Close menu"
+  },
+  "meta": {
+    "home": "Home Page | Prianik Studio",
+    "catalog": "Product Catalog | Prianik Studio",
+    "gallery": "Work Gallery | Prianik Studio",
+    "contacts": "Contacts | Prianik Studio",
+    "cart": "Shopping Cart | Prianik Studio",
+    "description": {
+      "home": "Prianik Studio offers laser engraving and 3D printing services of any complexity. Creation of unique products and souvenirs based on your design.",
+      "catalog": "Wide range of handmade products: items with laser engraving on wood and metal, 3D-printed models and custom souvenirs.",
+      "gallery": "Gallery of our workshop's works: examples of products with laser engraving and 3D printing. Evaluate the quality of our products.",
+      "contacts": "Contact us to order custom souvenirs and products. Prianik Studio operates in Moscow with delivery throughout Russia.",
+      "cart": "Ordering and purchasing products at Prianik Studio. Delivery throughout Russia, individual approach to each order.",
+      "product": "Detailed description, specifications and photos of the product. Order and delivery from Prianik Studio."
+    }
+  },
+  "notification": {
+    "custom_idea": "We can bring your custom idea, print or design to life - contact us",
+    "close": "Close"
+  },
+  "home": {
+    "title": "Prianik Studio",
+    "subtitle": "Laser engraving and 3D printing of any complexity. We bring your ideas to life as unique products.",
+    "go_to_catalog": "Go to catalog",
+    "about_us": "About us",
+    "about_text1": "We are a team of craftsmen working with modern Creality equipment. Our workshop offers high-quality laser engraving and 3D printing services.",
+    "about_text2": "Using the Creality Laser Falcon engraver, we create unique items on wood, metal and other materials. And with the help of a 3D printer, we bring any three-dimensional objects to reality.",
+    "about_text3": "We participate in events and fairs, presenting our products, and are always happy to fulfill individual orders based on your sketches or ideas.",
+    "contact_us": "Contact us",
+    "discover_products": "Discover products",
+    "our_categories": "Our Categories",
+    "categories": {
+      "3d_description": "Creating volumetric products and models of any complexity",
+      "engraving_description": "Unique patterns and inscriptions on various materials",
+      "wood_description": "Wooden products",
+      "metal_description": "Metal products",
+      "other_description": "Other"
+    },
+    "view_all_gallery": "View all gallery"
+  },
+  "order_form": {
+  "notification_title": "How we process orders",
+  "notification_text": "Fill out the form below, and we will contact you within one business day to discuss the details. We will answer all your questions and help you find the optimal solution."
+  },
+  "catalog": {
+    "title": "Product catalog",
+    "categories": {
+      "engraving": "Engraving",
+      "3d-printing": "3D Printing"
+    },
+    "subcategories": {
+      "wood": "Wood",
+      "metal": "Metal",
+      "other": "Other"
+    },
+    "show_categories": "Show categories",
+    "hide_categories": "Hide categories",
+    "found_items": "Items found:",
+    "search_placeholder": "Enter product name...",
+    "no_results": "No results found for your request. Try changing filter parameters.",
+    "reset_filters": "Reset filters",
+    "sort_by_price": "Sort by price"
+  },
+  "product": {
+    "main": "Home",
+    "catalog": "Catalog",
+    "characteristics": "Characteristics",
+    "material": "Material",
+    "weight": "Weight",
+    "dimensions": "Size",
+    "color": "Color",
+    "quantity": "Quantity",
+    "add_to_cart": "Add to cart",
+    "buy_now": "Buy now",
+    "similar_products": "Similar products",
+    "order_title": "Order checkout"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty_cart": "Your cart is empty",
+    "add_items": "Add items to cart to continue shopping",
+    "go_to_catalog": "Go to catalog",
+    "order_info": "Order information",
+    "your_order": "Your order",
+    "items": "Items",
+    "delivery": "Delivery",
+    "delivery_cost": "To be determined",
+    "total": "Total",
+    "checkout": "Checkout",
+    "comment": "Comment",
+    "comment_placeholder": "Specify additional details",
+    "error": {
+      "empty_cart": "Cart is empty. Please add items before checkout.",
+      "general": "An error occurred while processing your order. Please try again later.",
+      "order_not_created": "Failed to create order. Please check your information and try again."
+    },
+    "order_success": "Order successfully placed!",
+    "processing_order": "Processing order..."
+  },
+  "contacts": {
+    "title": "Contacts",
+    "our_contacts": "Our contacts",
+    "company_name": "Prianik Studio",
+    "company_address": "Quesada and Poás, Costa Rica",
+    "company_phone": "+506 8415 4807",
+    "company_email_prefix": "info",
+    "company_email_domain": "creality-workshop.com",
+    "company_hours": "Mon-Fri: 10:00-19:00, Sat: 11:00-17:00",
+    "phone": "Phone",
+    "email": "Email",
+    "work_hours": "Working hours",
+    "social_media": "Our social media",
+    "contact_us": "Contact us",
+    "faq_title": "Frequently asked questions",
+    "faq": {
+      "custom_order": {
+        "question": "How do I make a custom order?",
+        "answer": "To make a custom order, you can contact us by phone, email, or fill out the feedback form on the website. Indicate your wishes and requirements, and we will discuss all the details of your project."
+      },
+      "production_time": {
+        "question": "How long does production take?",
+        "answer": "Production time depends on the complexity and volume of the order. Standard orders usually take 1 to 3 business days. More complex projects may require more time. We will inform you of the exact timeframe after discussing the details of your order."
+      },
+      "delivery": {
+        "question": "Is order delivery possible?",
+        "answer": "Yes, we deliver orders throughout Russia. The cost and delivery time depend on the region and the chosen delivery method. You can also pick up your order from our workshop."
+      },
+      "materials": {
+        "question": "What materials do you use?",
+        "answer": "For laser engraving, we use various materials including different types of wood, metal, leather, acrylic, and others. For 3D printing, we use quality PLA, ABS, PETG plastics and other materials depending on the requirements for the product."
+      }
+    }
+  },
+  "gallery": {
+    "title": "Gallery"
+  },
+  "form": {
+    "name": "Full name",
+    "name_placeholder": "John Smith",
+    "email": "Email",
+    "email_placeholder": "Your email",
+    "phone": "Phone",
+    "phone_placeholder": "+1 (___) ___-____",
+    "message": "Message",
+    "message_placeholder": "Describe your request or idea...",
+    "submit": "Submit",
+    "sending": "Sending...",
+    "success_title": "Message sent!",
+    "success_message": "Thank you for contacting us. We will get back to you within one business day.",
+    "error_title": "Error",
+    "error": {
+      "name_required": "Please enter your name",
+      "email_required": "Please enter your email",
+      "email_invalid": "Please enter a valid email",
+      "phone_required": "Please enter your phone number",
+      "phone_invalid": "Please enter a valid phone number",
+      "message_required": "Please enter a message",
+      "general": "An error occurred while sending the form. Please try again later.",
+      "recaptcha_required": "Please verify that you are not a robot",
+      "recaptcha_expired": "Verification has expired. Please verify again",
+      "recaptcha_error": "An error occurred during verification. Please try again"
+    },
+    "verify_captcha": "Verification",
+    "captcha_explanation": "Please verify that you are not a robot to continue",
+    "verify": "Verify",
+    "cancel": "Cancel"
+  },
+  "image_viewer": {
+    "close": "Close",
+    "prev_image": "Previous image",
+    "next_image": "Next image",
+    "image_of": "Viewing image {current} of {total}"
+  },
+  "slider": {
+    "prev_slide": "Previous slide",
+    "next_slide": "Next slide"
+  },
+  "footer": {
+    "company": "© 2025 Prianik Studio",
+    "all_rights": "All rights reserved",
+    "legal_entity": "IE Ivanov I.I.",
+    "legal_id": "Business ID",
+    "working_hours_short": "10:00-19:00, Mon-Fri"
+  }
+}
