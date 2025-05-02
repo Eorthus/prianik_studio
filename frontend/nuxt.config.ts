@@ -77,13 +77,8 @@ export default defineNuxtConfig({
 
   nitro: {
     prerender: {
-      routes: [
-        '/',
-        '/catalog',
-        '/gallery',
-        '/contacts',
-        '/cart'
-      ]
+      //@ts-expect-error
+      enabled: false,
     }
   },
 

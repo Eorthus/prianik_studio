@@ -11,7 +11,7 @@ import { useHead, useSeoMeta } from "nuxt/app";
 import { getSeoMetadata } from "~/shared/useSeo";
 import { ref, watch, onMounted, computed } from "vue";
 import { useApiService } from "~/services/api";
-import { useCategories } from "./shared/useCategories";
+import { useCategories } from "~/shared/useCategories";
 
 const { getCategories, isLoading } = useApiService();
 
@@ -37,7 +37,6 @@ onMounted(loadCategories);
 const route = useRoute();
 const router = useRouter();
 
-
 // Создаем реактивную переменную для SEO данных
 const seoData = ref(getSeoMetadata(route, t, locale.value));
 
@@ -54,11 +53,14 @@ useSeoMeta({
   ogDescription: computed(() => seoData.value.description),
   ogImage: computed(() => seoData.value.image),
   ogUrl: computed(() => seoData.value.pageUrl),
+
+  //@ts-expect-error
   ogType: computed(() => seoData.value.type),
   ogLocale: computed(() => seoData.value.locale),
   twitterTitle: computed(() => seoData.value.title),
   twitterDescription: computed(() => seoData.value.description),
   twitterImage: computed(() => seoData.value.image),
+  //@ts-expect-error
   twitterCard: computed(() => seoData.value.twitterCard),
 });
 
@@ -75,8 +77,8 @@ useHead({
 
 // Отслеживаем изменения локали
 watch(locale, () => {
-  updateSeoMetadata()
-  loadCategories()
+  updateSeoMetadata();
+  loadCategories();
 });
 
 // Используем хук маршрутизации для обновления метаданных
