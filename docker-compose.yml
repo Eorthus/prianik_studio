@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: prianik-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0000
+      POSTGRES_DB: pryanik_db
+    restart: unless-stopped
+    networks:
+      - prianik-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: prianik-backend
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: 0000
+      DB_NAME: pryanik_db
+      GIN_MODE: release
+      ALLOWED_ORIGINS: https://prianik.com,http://prianik.com,https://www.prianik.com,http://www.prianik.com
+    restart: unless-stopped
+    networks:
+      - prianik-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: prianik-frontend
+    depends_on:
+      - backend
+    environment:
+      NUXT_PUBLIC_API_BASE_URL: https://prianik.com/api
+    restart: unless-stopped
+    networks:
+      - prianik-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: prianik-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    networks:
+      - prianik-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: prianik-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - nginx
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - prianik-network
+
+volumes:
+  postgres_data:
+
+networks:
+  prianik-network:
+    driver: bridge
