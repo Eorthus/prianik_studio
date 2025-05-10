@@ -412,7 +412,23 @@ watch(
                   <PlusIcon class="tw-w-4 tw-h-4" />
                 </button>
               </div>
-
+              <div
+                class="tw-bg-gray-100 tw-border-l-4 tw-border-gray-800 tw-p-3 tw-rounded-md tw-max-w-2xl tw-shadow-sm tw-mb-4"
+              >
+                <div class="tw-flex tw-items-start">
+                  <div class="tw-flex-shrink-0 tw-pt-0.5">
+                    <InfoIcon class="tw-h-5 tw-w-5 tw-text-gray-800" />
+                  </div>
+                  <div class="tw-ml-3 tw-flex-1">
+                    <h3 class="tw-text-lg tw-font-medium tw-text-gray-800">
+                      {{ $t("order_form.notification_title") }}
+                    </h3>
+                    <div class="tw-mt-2 tw-text-gray-600">
+                      <p>{{ $t("order_form.notification_text") }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-4">
                 <button
                   @click="addToCart"

@@ -120,3 +120,21 @@ type ProductTranslationCreateRequest struct {
 	Currency        string            `json:"currency" binding:"required"`    // Добавляем валюту
 	Characteristics map[string]string `json:"characteristics"`
 }
+
+// ProductUpdateRequest представляет запрос на обновление товара
+type ProductUpdateRequest struct {
+	CategoryID    *int64                                      `json:"category_id,omitempty"`
+	SubcategoryID *int64                                      `json:"subcategory_id,omitempty"`
+	Images        []string                                    `json:"images,omitempty"`
+	Translations  map[string]*ProductTranslationUpdateRequest `json:"translations,omitempty"`
+}
+
+// ProductTranslationUpdateRequest представляет перевод товара при обновлении
+// Все поля являются указателями, чтобы отличать отсутствующие значения от пустых
+type ProductTranslationUpdateRequest struct {
+	Name            *string           `json:"name,omitempty"`
+	Description     *string           `json:"description,omitempty"`
+	Price           *float64          `json:"price,omitempty"`
+	Currency        *string           `json:"currency,omitempty"`
+	Characteristics map[string]string `json:"characteristics,omitempty"`
+}

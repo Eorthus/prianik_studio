@@ -54,6 +54,7 @@ func SetupRouter(
 		api.GET("/products/:id/related", productHandler.GetRelatedProducts)
 		api.GET("/categories", productHandler.GetCategories)
 		api.POST("/products", productHandler.CreateProduct)
+		api.PATCH("/products/:id", productHandler.UpdateProduct)
 
 		// Галерея
 		api.GET("/gallery", galleryHandler.GetGalleryItems)

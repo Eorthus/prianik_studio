@@ -41,6 +41,7 @@ type ProductRepository interface {
 	GetRelatedProducts(ctx context.Context, productID int64, limit int, language string) ([]models.Product, error)
 	GetCategories(ctx context.Context, language string) ([]models.Category, error)
 	CreateProduct(ctx context.Context, product *models.Product) (int64, error)
+	UpdateProduct(ctx context.Context, product *models.Product) error
 }
 
 // GalleryRepository интерфейс для работы с галереей

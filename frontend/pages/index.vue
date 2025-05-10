@@ -539,9 +539,9 @@ onUnmounted(() => {
             muted
             playsinline
           >
-            <source src="../assets/img/banner.mp4" type="video/mp4" />
+            <source src="../assets/img/banner_video.mp4" type="video/mp4" />
             <img
-              src="https://s3.stroi-news.ru/img/masterskaya-kartinki-1.jpg"
+              src="../assets/img/engraving3.png"
               alt="Мастерская"
               class="tw-object-cover tw-w-full tw-h-full"
             />
@@ -625,7 +625,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-16 tw-aspect-h-9 tw-block"
           >
             <img
-              src="https://s3.stroi-news.ru/img/masterskaya-kartinki-1.jpg"
+              src="../assets/img/3d_printing.png"
               alt="3D Печать"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -650,7 +650,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-16 tw-aspect-h-9 tw-block"
           >
             <img
-              src="https://s3.stroi-news.ru/img/masterskaya-kartinki-1.jpg"
+              src="../assets/img/engraving.png"
               alt="Выжигание"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -680,7 +680,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-4 tw-aspect-h-3 tw-block"
           >
             <img
-              src="https://s3.stroi-news.ru/img/masterskaya-kartinki-1.jpg"
+              src="../assets/img/wood.png"
               alt="Дерево"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -705,7 +705,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-4 tw-aspect-h-3 tw-block"
           >
             <img
-              src="https://s3.stroi-news.ru/img/masterskaya-kartinki-1.jpg"
+              src="../assets/img/metal.png"
               alt="Металл"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -730,7 +730,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-4 tw-aspect-h-3 tw-block"
           >
             <img
-              src="https://s3.stroi-news.ru/img/masterskaya-kartinki-1.jpg"
+              src="../assets/img/glass.png"
               alt="Другое"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />

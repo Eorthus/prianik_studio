@@ -32,7 +32,7 @@
       <!-- Email -->
       <LInput
         label="form.email"
-        placeholder="form.email_placeholder"
+        :placeholder="emailComputed"
         v-model="formData.email"
         :errors="formState.errors.email"
         type="email"
@@ -100,8 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import { computed, onMounted, ref } from "vue";
 import SubmitModal from "./SubmitModal.vue";
 import ReCaptchaModal from "../ReCaptchaModal.vue";
 import { useCsrf } from "~/shared/useCsrf";
@@ -110,6 +109,7 @@ import SpinnerIcon from "../icons/SpinnerIcon.vue";
 import LInput from "~/lib/LInput.vue";
 import LTextarea from "~/lib/LTextarea.vue";
 
+//@ts-expect-error 
 const { t } = useI18n();
 const emit = defineEmits<{
   submit: [formData: object];
@@ -160,6 +160,8 @@ const formState = ref({
     general: "",
   },
 });
+
+const emailComputed = computed(()=>`${t('form.email_placeholder_prefix')}@${t('form.email_placeholder_main')}`)
 
 // Открытие/закрытие модального окна с reCAPTCHA
 const openCaptchaModal = () => {

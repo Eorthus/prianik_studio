@@ -226,3 +226,103 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, models.NewSuccessResponse(response))
 }
+
+// UpdateProduct обработчик для обновления существующего товара
+func (h *ProductHandler) UpdateProduct(c *gin.Context) {
+	// Получаем ID товара из URL
+	idParam := c.Param("id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.NewErrorResponse("Некорректный ID товара"))
+		return
+	}
+
+	// Проверяем существование товара в базе
+	language := c.DefaultQuery("language", "ru") // Получаем язык из запроса
+	_, err = h.repo.GetProductByID(c.Request.Context(), id, language)
+	if err != nil {
+		h.logger.WithError(err).Errorf("Товар с ID=%d не найден", id)
+		c.JSON(http.StatusNotFound, models.NewErrorResponse("Товар не найден"))
+		return
+	}
+
+	// Парсим JSON из тела запроса
+	var request models.ProductUpdateRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		h.logger.WithError(err).Error("Ошибка при разборе JSON запроса на обновление товара")
+		c.JSON(http.StatusBadRequest, models.NewErrorResponse("Некорректный формат запроса"))
+		return
+	}
+
+	// Создаем модель товара для обновления
+	product := &models.Product{
+		ID:           id,
+		Images:       request.Images,
+		Translations: make(map[string]*models.ProductTranslation),
+	}
+
+	// Устанавливаем CategoryID, если он предоставлен
+	if request.CategoryID != nil {
+		product.CategoryID = *request.CategoryID
+	}
+
+	// Устанавливаем SubcategoryID, если он предоставлен
+	if request.SubcategoryID != nil {
+		product.SubcategoryID = *request.SubcategoryID
+	}
+
+	// Преобразуем переводы, если они есть
+	for lang, translation := range request.Translations {
+		// Создаем перевод с значениями по умолчанию
+		productTranslation := &models.ProductTranslation{
+			Characteristics: translation.Characteristics,
+		}
+
+		// Устанавливаем поля, только если они предоставлены
+		if translation.Name != nil {
+			productTranslation.Name = *translation.Name
+		}
+
+		if translation.Description != nil {
+			productTranslation.Description = *translation.Description
+		}
+
+		if translation.Price != nil {
+			productTranslation.Price = *translation.Price
+		}
+
+		if translation.Currency != nil {
+			productTranslation.Currency = *translation.Currency
+		}
+
+		// Добавляем перевод в карту переводов
+		product.Translations[lang] = productTranslation
+	}
+
+	// Обновляем товар в базе данных
+	err = h.repo.UpdateProduct(c.Request.Context(), product)
+	if err != nil {
+		h.logger.WithError(err).Error("Ошибка при обновлении товара")
+		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Ошибка при обновлении товара"))
+		return
+	}
+
+	// Получаем обновленный товар для возврата
+	updatedProduct, err := h.repo.GetProductByID(c.Request.Context(), id, language)
+	if err != nil {
+		h.logger.WithError(err).Errorf("Ошибка при получении обновленного товара ID=%d", id)
+		// Продолжаем выполнение, так как товар уже обновлен
+	}
+
+	// Возвращаем успешный ответ
+	response := map[string]interface{}{
+		"id":      id,
+		"message": "Товар успешно обновлен",
+	}
+
+	if err == nil {
+		response["product"] = updatedProduct
+	}
+
+	c.JSON(http.StatusOK, models.NewSuccessResponse(response))
+}

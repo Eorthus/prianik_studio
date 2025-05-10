@@ -594,3 +594,255 @@ func (r *PostgresRepository) CreateProduct(ctx context.Context, product *models.
 
 	return productID, nil
 }
+
+// UpdateProduct обновляет существующий товар в базе данных
+func (r *PostgresRepository) UpdateProduct(ctx context.Context, product *models.Product) error {
+	// Начинаем транзакцию
+	tx, err := r.db.(*sqlx.DB).BeginTxx(ctx, nil)
+	if err != nil {
+		r.logger.WithError(err).Error("Ошибка при начале транзакции для обновления товара")
+		return fmt.Errorf("ошибка при начале транзакции: %w", err)
+	}
+
+	// Добавляем отложенную функцию для отката транзакции в случае ошибки
+	defer func() {
+		if err != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				r.logger.WithError(rollbackErr).Error("Ошибка при откате транзакции")
+			}
+		}
+	}()
+
+	// Получаем текущую информацию о товаре
+	var currentProduct struct {
+		CategoryID    int64         `db:"category_id"`
+		SubcategoryID sql.NullInt64 `db:"subcategory_id"`
+	}
+
+	query := `SELECT category_id, subcategory_id FROM products WHERE id = $1`
+	err = tx.GetContext(ctx, &currentProduct, query, product.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("товар с ID=%d не найден", product.ID)
+		}
+		r.logger.WithError(err).Errorf("Ошибка при получении информации о товаре ID=%d", product.ID)
+		return fmt.Errorf("ошибка при получении информации о товаре: %w", err)
+	}
+
+	// Подготавливаем данные для обновления основной информации о товаре
+	var categoryID int64
+	var subcategoryID *int64
+
+	// Используем текущие значения, если новые не предоставлены
+	categoryID = currentProduct.CategoryID
+	if currentProduct.SubcategoryID.Valid {
+		subcatID := currentProduct.SubcategoryID.Int64
+		subcategoryID = &subcatID
+	}
+
+	// Обновляем значения, если они предоставлены
+	if product.CategoryID != 0 {
+		categoryID = product.CategoryID
+	}
+
+	if product.SubcategoryID != 0 {
+		// Проверка на 0 означает, что поле было установлено в запросе
+		subcategoryID = &product.SubcategoryID
+	}
+
+	// Обновляем основную информацию о товаре
+	query = `
+	UPDATE products 
+	SET category_id = $1, 
+	    subcategory_id = $2, 
+	    updated_at = NOW() 
+	WHERE id = $3
+	`
+	_, err = tx.ExecContext(ctx, query, categoryID, subcategoryID, product.ID)
+	if err != nil {
+		r.logger.WithError(err).Errorf("Ошибка при обновлении основной информации товара ID=%d", product.ID)
+		return fmt.Errorf("ошибка при обновлении основной информации товара: %w", err)
+	}
+
+	// Обновляем переводы товара, если они предоставлены
+	if product.Translations != nil && len(product.Translations) > 0 {
+		for lang, translation := range product.Translations {
+			// Проверяем существование перевода для данного языка
+			var translationExists bool
+			query = `SELECT EXISTS(SELECT 1 FROM product_translations WHERE product_id = $1 AND language = $2)`
+			err = tx.GetContext(ctx, &translationExists, query, product.ID, lang)
+			if err != nil {
+				r.logger.WithError(err).Errorf("Ошибка при проверке существования перевода для товара ID=%d, язык=%s", product.ID, lang)
+				return fmt.Errorf("ошибка при проверке существования перевода: %w", err)
+			}
+
+			// Если перевод для данного языка уже существует, обновляем его
+			if translationExists {
+				// Сначала получаем текущие значения перевода
+				var currentTranslation struct {
+					Name        string  `db:"name"`
+					Description string  `db:"description"`
+					Price       float64 `db:"price"`
+					Currency    string  `db:"currency"`
+				}
+
+				query = `
+				SELECT name, description, price, currency 
+				FROM product_translations 
+				WHERE product_id = $1 AND language = $2
+				`
+
+				err = tx.GetContext(ctx, &currentTranslation, query, product.ID, lang)
+				if err != nil && err != sql.ErrNoRows {
+					r.logger.WithError(err).Errorf("Ошибка при получении текущего перевода товара ID=%d, язык=%s", product.ID, lang)
+					return fmt.Errorf("ошибка при получении текущего перевода: %w", err)
+				}
+
+				// Используем новые значения или оставляем текущие
+				name := currentTranslation.Name
+				if translation.Name != "" {
+					name = translation.Name
+				}
+
+				description := currentTranslation.Description
+				if translation.Description != "" {
+					description = translation.Description
+				}
+
+				price := currentTranslation.Price
+				if translation.Price > 0 { // Используем > 0 вместо != 0, чтобы избежать отрицательных цен
+					price = translation.Price
+				}
+
+				currency := currentTranslation.Currency
+				if translation.Currency != "" {
+					currency = translation.Currency
+				}
+
+				// Обновляем перевод
+				query = `
+				UPDATE product_translations 
+				SET name = $1, 
+				    description = $2, 
+				    price = $3, 
+				    currency = $4 
+				WHERE product_id = $5 AND language = $6
+				`
+
+				_, err = tx.ExecContext(
+					ctx,
+					query,
+					name,
+					description,
+					price,
+					currency,
+					product.ID,
+					lang,
+				)
+
+				if err != nil {
+					r.logger.WithError(err).Errorf("Ошибка при обновлении перевода для товара ID=%d, язык=%s", product.ID, lang)
+					return fmt.Errorf("ошибка при обновлении перевода: %w", err)
+				}
+			} else {
+				// Если перевода нет, создаем новый
+				query = `
+				INSERT INTO product_translations (product_id, language, name, description, price, currency)
+				VALUES ($1, $2, $3, $4, $5, $6)
+				`
+
+				_, err = tx.ExecContext(
+					ctx,
+					query,
+					product.ID,
+					lang,
+					translation.Name,
+					translation.Description,
+					translation.Price,
+					translation.Currency,
+				)
+
+				if err != nil {
+					r.logger.WithError(err).Errorf("Ошибка при добавлении перевода для товара ID=%d, язык=%s", product.ID, lang)
+					return fmt.Errorf("ошибка при добавлении перевода: %w", err)
+				}
+			}
+
+			// Обновляем характеристики товара, если они есть
+			if translation.Characteristics != nil && len(translation.Characteristics) > 0 {
+				// Удаляем существующие характеристики для данного языка
+				query = `DELETE FROM product_characteristics WHERE product_id = $1 AND language = $2`
+				_, err = tx.ExecContext(ctx, query, product.ID, lang)
+				if err != nil {
+					r.logger.WithError(err).Errorf("Ошибка при удалении характеристик товара ID=%d, язык=%s", product.ID, lang)
+					return fmt.Errorf("ошибка при удалении характеристик: %w", err)
+				}
+
+				// Добавляем новые характеристики
+				for key, value := range translation.Characteristics {
+					query = `
+					INSERT INTO product_characteristics (product_id, language, key, value)
+					VALUES ($1, $2, $3, $4)
+					`
+
+					_, err = tx.ExecContext(
+						ctx,
+						query,
+						product.ID,
+						lang,
+						key,
+						value,
+					)
+
+					if err != nil {
+						r.logger.WithError(err).Errorf("Ошибка при добавлении характеристики %s товара ID=%d, язык=%s", key, product.ID, lang)
+						return fmt.Errorf("ошибка при добавлении характеристики: %w", err)
+					}
+				}
+			}
+		}
+	}
+
+	// Обновляем изображения, если они предоставлены
+	if product.Images != nil { // Проверяем именно на nil, а не на длину, чтобы различать "не предоставлены" от "пустой массив"
+		// Удаляем существующие изображения
+		query = `DELETE FROM product_images WHERE product_id = $1`
+		_, err = tx.ExecContext(ctx, query, product.ID)
+		if err != nil {
+			r.logger.WithError(err).Errorf("Ошибка при удалении изображений товара ID=%d", product.ID)
+			return fmt.Errorf("ошибка при удалении изображений: %w", err)
+		}
+
+		// Добавляем новые изображения
+		for i, imageURL := range product.Images {
+			isMain := i == 0 // Первое изображение - основное
+
+			query = `
+			INSERT INTO product_images (product_id, url, is_main, sort_order, created_at)
+			VALUES ($1, $2, $3, $4, NOW())
+			`
+
+			_, err = tx.ExecContext(
+				ctx,
+				query,
+				product.ID,
+				imageURL,
+				isMain,
+				i, // sort_order - порядок сортировки
+			)
+
+			if err != nil {
+				r.logger.WithError(err).Errorf("Ошибка при добавлении изображения %s", imageURL)
+				return fmt.Errorf("ошибка при добавлении изображения: %w", err)
+			}
+		}
+	}
+
+	// Фиксируем транзакцию
+	if err = tx.Commit(); err != nil {
+		r.logger.WithError(err).Error("Ошибка при фиксации транзакции")
+		return fmt.Errorf("ошибка при фиксации транзакции: %w", err)
+	}
+
+	return nil
+}
