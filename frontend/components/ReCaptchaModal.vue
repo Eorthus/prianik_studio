@@ -38,6 +38,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import CrossIcon from "./icons/CrossIcon.vue";
+import { useRuntimeConfig } from "nuxt/app";
 // Props
 const props = defineProps<{
   isOpen: boolean;
@@ -47,8 +48,9 @@ const props = defineProps<{
 const recaptchaId = ref<string | null>(null);
 const recaptchaContainer = ref<HTMLElement | null>(null);
 const error = ref<string>("");
-// Ключ сайта reCAPTCHA (замените на свой ключ)
-const siteKey = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"; // Это тестовый ключ
+
+const { public: { recaptchaSiteKey } } = useRuntimeConfig();
+const siteKey = recaptchaSiteKey;
 
 // Эмиты
 const emit = defineEmits(["verify", "expire", "error", "close"]);
