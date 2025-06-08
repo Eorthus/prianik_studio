@@ -26,9 +26,11 @@
             {{ $t("form.captcha_explanation") }}
           </p>
 
-          <div ref="recaptchaContainer" class="tw-mb-4 recaptcha-container"></div>
+          <!-- Контейнер для reCAPTCHA v2 -->
+          <div ref="recaptchaContainer" class="tw-mb-4 recaptcha-container tw-flex tw-justify-center"></div>
+          
           <!-- Сообщение об ошибке -->
-          <p v-if="error" class="tw-text-red-500 tw-mt-2">{{ error }}</p>
+          <p v-if="error" class="tw-text-red-500 tw-mt-2 tw-text-center">{{ error }}</p>
         </div>
       </div>
     </div>
@@ -59,7 +61,7 @@ const siteKey = recaptchaSiteKey;
 // Эмиты
 const emit = defineEmits(["verify", "expire", "error", "close"]);
 
-// Функция для инициализации reCAPTCHA
+// Функция для инициализации reCAPTCHA v2
 const initRecaptcha = () => {
   if (!window.grecaptcha || !recaptchaContainer.value) {
     console.error("reCAPTCHA не загружена или контейнер не найден");
@@ -69,41 +71,59 @@ const initRecaptcha = () => {
   // Проверяем, что ключ доступен
   if (!siteKey) {
     console.error("reCAPTCHA site key не найден");
+    error.value = "Ошибка конфигурации reCAPTCHA";
     return;
   }
 
   try {
+    // Очищаем контейнер перед рендерингом
+    recaptchaContainer.value.innerHTML = '';
+    
     recaptchaId.value = window.grecaptcha.render(recaptchaContainer.value, {
       sitekey: siteKey,
       callback: (response: string) => {
+        console.log("reCAPTCHA v2 успешно пройдена");
         emit("verify", response);
         emit("close");
       },
       "expired-callback": () => {
+        console.log("reCAPTCHA истекла");
         emit("expire");
+        error.value = "Время проверки истекло. Попробуйте снова.";
       },
       "error-callback": () => {
+        console.log("Ошибка reCAPTCHA");
         emit("error", "Ошибка reCAPTCHA");
+        error.value = "Ошибка проверки. Попробуйте обновить страницу.";
       },
       size: "normal",
       theme: "light"
     });
+    
+    console.log("reCAPTCHA v2 инициализирована с ID:", recaptchaId.value);
   } catch (e) {
     console.error("Ошибка инициализации reCAPTCHA:", e);
+    error.value = "Ошибка загрузки проверки безопасности";
   }
 };
 
 // Функция сброса капчи
 const reset = () => {
   if (window.grecaptcha && recaptchaId.value !== null) {
-    window.grecaptcha.reset(recaptchaId.value);
+    try {
+      window.grecaptcha.reset(recaptchaId.value);
+      error.value = "";
+    } catch (e) {
+      console.error("Ошибка сброса reCAPTCHA:", e);
+    }
   }
 };
 
-// Функция для загрузки скрипта reCAPTCHA
+// Функция для загрузки скрипта reCAPTCHA v2
 const loadRecaptchaScript = () => {
   // Проверяем, был ли скрипт уже загружен
   if (window.grecaptcha) {
+    console.log("reCAPTCHA уже загружена");
     initRecaptcha();
     return;
   }
@@ -111,26 +131,29 @@ const loadRecaptchaScript = () => {
   // Проверяем, что ключ загружен
   if (!siteKey) {
     console.error("reCAPTCHA site key не найден в конфигурации");
+    error.value = "Ошибка конфигурации reCAPTCHA";
     return;
   }
 
-  // Создаем скрипт reCAPTCHA с ключом в URL
+  console.log("Загрузка reCAPTCHA v2 с ключом:", siteKey.substring(0, 20) + "...");
+
+  // Создаем скрипт reCAPTCHA v2 (БЕЗ параметра render с ключом!)
   const script = document.createElement("script");
-  script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+  script.src = `https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoadedV2&render=explicit`;
   script.async = true;
   script.defer = true;
 
-  // Обработчик загрузки скрипта
-  script.onload = () => {
-    // Ждем готовности grecaptcha
-    if (window.grecaptcha && window.grecaptcha.ready) {
-      window.grecaptcha.ready(() => {
-        initRecaptcha();
-      });
-    } else {
-      // Fallback если ready не доступен
-      setTimeout(initRecaptcha, 100);
-    }
+  // Определяем глобальную функцию обратного вызова
+  window.onRecaptchaLoadedV2 = () => {
+    console.log("reCAPTCHA v2 загружена, инициализация...");
+    setTimeout(() => {
+      initRecaptcha();
+    }, 100);
+  };
+
+  script.onerror = () => {
+    error.value = "Ошибка загрузки reCAPTCHA";
+    console.error("Ошибка загрузки скрипта reCAPTCHA");
   };
 
   // Добавляем скрипт на страницу
@@ -144,11 +167,15 @@ const closeModal = () => {
 
 // Хук жизненного цикла
 onMounted(() => {
+  console.log("ReCaptchaModal смонтирован");
   loadRecaptchaScript();
 });
 
 onUnmounted(() => {
-  // Очистка - больше не нужна, так как не используем глобальный callback
+  // Очистка глобальной функции
+  if (window.onRecaptchaLoadedV2) {
+    window.onRecaptchaLoadedV2 = undefined;
+  }
 });
 
 // Экспортируем методы
@@ -162,7 +189,7 @@ defineExpose({
 declare global {
   interface Window {
     grecaptcha: any;
-    onRecaptchaLoaded?: () => void;
+    onRecaptchaLoadedV2?: () => void;
   }
 }
 </script>
