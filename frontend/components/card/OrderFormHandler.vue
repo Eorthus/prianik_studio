@@ -106,7 +106,7 @@ const handleSubmit = async ({
       comment: formData.comment || "",
       items: orderItems.value,
       language: locale.value as LangType,
-      recaptchaResponse: formData.recaptchaResponse, // Добавляем ответ капчи
+      recaptchaResponse: "", // Добавляем ответ капчи
     };
 
     // Отправляем заказ на сервер

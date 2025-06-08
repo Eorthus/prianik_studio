@@ -54,7 +54,7 @@ const handleSubmit = async ({ formData, formState, handleValidationErrors }) => 
       phone: formData.phone,
       message: formData.message,
       language: locale.value as LangType,
-      recaptchaResponse: formData.recaptchaResponse // Передаем ответ капчи
+      recaptchaResponse: "" // Передаем ответ капчи
     });
     
     if (response.success) {
