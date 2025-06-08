@@ -8,7 +8,7 @@
     <textarea
       id="message"
       v-model="model"
-      rows="4"
+      rows="2"
       class="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-gray-500 focus:tw-border-gray-500"
       :placeholder="$t(props.placeholder)"
       :required="props.required"

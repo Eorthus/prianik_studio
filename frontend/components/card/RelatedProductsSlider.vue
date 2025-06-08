@@ -41,7 +41,7 @@
                   <p
                     class="tw-text-lg tw-font-semibold tw-text-gray-800 tw-mt-auto"
                   >
-                    {{ product.price }} ₽
+                    {{ product.price }} {{ currencyMap[product.currency || "RUB"] }}
                   </p>
                 </div>
               </NuxtLink>
@@ -78,15 +78,11 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import LeftArrowIcon from "../icons/LeftArrowIcon.vue";
 import RightArrowIcon from "../icons/RightArrowIcon.vue";
+import { currencyMap, type Product } from "~/components";
 
 const props = withDefaults(
   defineProps<{
-    products: {
-      name: string;
-      id: number;
-      price: number;
-      images: string[];
-    }[];
+    products: Product[];
     title: string;
   }>(),
   {
