@@ -3,7 +3,7 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   ssr: true,
 
-  i18n:{
+  i18n: {
     strategy: "prefix_except_default",
     defaultLocale: "es",
     // lazy: false,
@@ -15,7 +15,7 @@ export default defineNuxtConfig({
       },
       {
         code: "en",
-        name: "English", 
+        name: "English",
         file: "en.json",
       },
       {
@@ -66,26 +66,27 @@ export default defineNuxtConfig({
   },
 
   css: ["@/assets/scss/main.scss"],
-  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/i18n",     "@nuxtjs/sitemap"],
-  plugins: [
-    "~/plugins/gsap.ts"
-  ],
+  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/i18n", "@nuxtjs/sitemap"],
+  plugins: ["~/plugins/gsap.ts"],
   compatibilityDate: "2025-04-13",
   imports: {
-    autoImport: true // ← это значение по умолчанию
+    autoImport: true, // ← это значение по умолчанию
   },
 
   nitro: {
     prerender: {
       //@ts-expect-error
-      enabled: false
-    }
+      enabled: false,
+    },
   },
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:8080/api',
-      recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY
-    }
+      apiBaseUrl:
+        process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api",
+      recaptchaSiteKey:
+        process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY ||
+        "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+    },
   },
 });
