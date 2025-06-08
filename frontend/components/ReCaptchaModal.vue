@@ -135,6 +135,7 @@ const loadRecaptchaScript = () => {
     return;
   }
 
+  //@ts-expect-error
   console.log("Загрузка reCAPTCHA v2 с ключом:", siteKey.substring(0, 20) + "...");
 
   // Создаем скрипт reCAPTCHA v2 (БЕЗ параметра render с ключом!)
