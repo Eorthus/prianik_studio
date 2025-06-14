@@ -185,7 +185,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 
 	// Устанавливаем подкатегорию, если она указана
 	if request.SubcategoryID != nil {
-		product.SubcategoryID = int64(*request.SubcategoryID)
+		product.SubcategoryID = request.SubcategoryID
 	}
 
 	// Преобразуем переводы
@@ -268,7 +268,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 
 	// Устанавливаем SubcategoryID, если он предоставлен
 	if request.SubcategoryID != nil {
-		product.SubcategoryID = *request.SubcategoryID
+		product.SubcategoryID = request.SubcategoryID
 	}
 
 	// Преобразуем переводы, если они есть

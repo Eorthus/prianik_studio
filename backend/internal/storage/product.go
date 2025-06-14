@@ -92,15 +92,15 @@ func (r *PostgresRepository) GetProducts(ctx context.Context, filter models.Prod
 
 	// Запрос товаров
 	var products []struct {
-		ID            int64        `db:"id"`
-		CategoryID    int64        `db:"category_id"`
-		SubcategoryID int64        `db:"subcategory_id"`
-		CreatedAt     sql.NullTime `db:"created_at"`
-		UpdatedAt     sql.NullTime `db:"updated_at"`
-		Name          string       `db:"name"`
-		Description   string       `db:"description"`
-		Price         float64      `db:"price"`
-		Currency      string       `db:"currency"`
+		ID            int64         `db:"id"`
+		CategoryID    int64         `db:"category_id"`
+		SubcategoryID sql.NullInt64 `db:"subcategory_id"`
+		CreatedAt     sql.NullTime  `db:"created_at"`
+		UpdatedAt     sql.NullTime  `db:"updated_at"`
+		Name          string        `db:"name"`
+		Description   string        `db:"description"`
+		Price         float64       `db:"price"`
+		Currency      string        `db:"currency"`
 	}
 
 	err = r.db.SelectContext(ctx, &products, query, args...)
@@ -113,15 +113,18 @@ func (r *PostgresRepository) GetProducts(ctx context.Context, filter models.Prod
 	result.Items = make([]models.Product, 0, len(products))
 	for _, p := range products {
 		product := models.Product{
-			ID:            p.ID,
-			CategoryID:    p.CategoryID,
-			SubcategoryID: p.SubcategoryID,
-			CreatedAt:     p.CreatedAt.Time,
-			UpdatedAt:     p.UpdatedAt.Time,
-			Name:          p.Name,
-			Description:   p.Description,
-			Price:         p.Price,
-			Currency:      p.Currency,
+			ID:          p.ID,
+			CategoryID:  p.CategoryID,
+			CreatedAt:   p.CreatedAt.Time,
+			UpdatedAt:   p.UpdatedAt.Time,
+			Name:        p.Name,
+			Description: p.Description,
+			Price:       p.Price,
+			Currency:    p.Currency,
+		}
+
+		if p.SubcategoryID.Valid {
+			product.SubcategoryID = &p.SubcategoryID.Int64
 		}
 
 		// Получаем изображения продукта
@@ -187,15 +190,15 @@ func (r *PostgresRepository) GetProductByID(ctx context.Context, id int64, langu
 	`
 
 	var product struct {
-		ID            int64        `db:"id"`
-		CategoryID    int64        `db:"category_id"`
-		SubcategoryID int64        `db:"subcategory_id"`
-		CreatedAt     sql.NullTime `db:"created_at"`
-		UpdatedAt     sql.NullTime `db:"updated_at"`
-		Name          string       `db:"name"`
-		Description   string       `db:"description"`
-		Price         float64      `db:"price"`
-		Currency      string       `db:"currency"`
+		ID            int64         `db:"id"`
+		CategoryID    int64         `db:"category_id"`
+		SubcategoryID sql.NullInt64 `db:"subcategory_id"`
+		CreatedAt     sql.NullTime  `db:"created_at"`
+		UpdatedAt     sql.NullTime  `db:"updated_at"`
+		Name          string        `db:"name"`
+		Description   string        `db:"description"`
+		Price         float64       `db:"price"`
+		Currency      string        `db:"currency"`
 	}
 
 	err := r.db.GetContext(ctx, &product, query, id, language)
@@ -207,10 +210,13 @@ func (r *PostgresRepository) GetProductByID(ctx context.Context, id int64, langu
 		return result, fmt.Errorf("ошибка при получении товара: %w", err)
 	}
 
+	if product.SubcategoryID.Valid {
+		result.SubcategoryID = &product.SubcategoryID.Int64
+	}
+
 	// Заполняем основные поля
 	result.ID = product.ID
 	result.CategoryID = product.CategoryID
-	result.SubcategoryID = product.SubcategoryID
 	result.CreatedAt = product.CreatedAt.Time
 	result.UpdatedAt = product.UpdatedAt.Time
 	result.Name = product.Name
@@ -297,15 +303,15 @@ func (r *PostgresRepository) GetRelatedProducts(ctx context.Context, productID i
     `
 
 	var products []struct {
-		ID            int64        `db:"id"`
-		CategoryID    int64        `db:"category_id"`
-		SubcategoryID int64        `db:"subcategory_id"`
-		CreatedAt     sql.NullTime `db:"created_at"`
-		UpdatedAt     sql.NullTime `db:"updated_at"`
-		Name          string       `db:"name"`
-		Description   string       `db:"description"`
-		Price         float64      `db:"price"`
-		Currency      string       `db:"currency"`
+		ID            int64         `db:"id"`
+		CategoryID    int64         `db:"category_id"`
+		SubcategoryID sql.NullInt64 `db:"subcategory_id"`
+		CreatedAt     sql.NullTime  `db:"created_at"`
+		UpdatedAt     sql.NullTime  `db:"updated_at"`
+		Name          string        `db:"name"`
+		Description   string        `db:"description"`
+		Price         float64       `db:"price"`
+		Currency      string        `db:"currency"`
 	}
 
 	err = r.db.SelectContext(ctx, &products, query, categoryID, productID, language, limit)
@@ -316,15 +322,18 @@ func (r *PostgresRepository) GetRelatedProducts(ctx context.Context, productID i
 	// Преобразуем результаты запроса в модели
 	for _, p := range products {
 		product := models.Product{
-			ID:            p.ID,
-			CategoryID:    p.CategoryID,
-			SubcategoryID: p.SubcategoryID,
-			CreatedAt:     p.CreatedAt.Time,
-			UpdatedAt:     p.UpdatedAt.Time,
-			Name:          p.Name,
-			Description:   p.Description,
-			Price:         p.Price,
-			Currency:      p.Currency,
+			ID:          p.ID,
+			CategoryID:  p.CategoryID,
+			CreatedAt:   p.CreatedAt.Time,
+			UpdatedAt:   p.UpdatedAt.Time,
+			Name:        p.Name,
+			Description: p.Description,
+			Price:       p.Price,
+			Currency:    p.Currency,
+		}
+
+		if p.SubcategoryID.Valid {
+			product.SubcategoryID = &p.SubcategoryID.Int64
 		}
 
 		// Получаем основное изображение товара
@@ -491,17 +500,12 @@ func (r *PostgresRepository) CreateProduct(ctx context.Context, product *models.
     RETURNING id
     `
 
-	var subcategoryID *int64
-	if product.SubcategoryID != 0 {
-		subcategoryID = &product.SubcategoryID
-	}
-
 	var productID int64
 	err = tx.QueryRowContext(
 		ctx,
 		query,
 		product.CategoryID,
-		subcategoryID,
+		product.SubcategoryID,
 		product.CreatedAt,
 		product.UpdatedAt,
 	).Scan(&productID)
@@ -631,23 +635,17 @@ func (r *PostgresRepository) UpdateProduct(ctx context.Context, product *models.
 
 	// Подготавливаем данные для обновления основной информации о товаре
 	var categoryID int64
-	var subcategoryID *int64
+	var subcatID *int64
 
 	// Используем текущие значения, если новые не предоставлены
 	categoryID = currentProduct.CategoryID
 	if currentProduct.SubcategoryID.Valid {
-		subcatID := currentProduct.SubcategoryID.Int64
-		subcategoryID = &subcatID
+		subcatID = &currentProduct.SubcategoryID.Int64
 	}
 
 	// Обновляем значения, если они предоставлены
 	if product.CategoryID != 0 {
 		categoryID = product.CategoryID
-	}
-
-	if product.SubcategoryID != 0 {
-		// Проверка на 0 означает, что поле было установлено в запросе
-		subcategoryID = &product.SubcategoryID
 	}
 
 	// Обновляем основную информацию о товаре
@@ -658,7 +656,7 @@ func (r *PostgresRepository) UpdateProduct(ctx context.Context, product *models.
 	    updated_at = NOW() 
 	WHERE id = $3
 	`
-	_, err = tx.ExecContext(ctx, query, categoryID, subcategoryID, product.ID)
+	_, err = tx.ExecContext(ctx, query, categoryID, subcatID, product.ID)
 	if err != nil {
 		r.logger.WithError(err).Errorf("Ошибка при обновлении основной информации товара ID=%d", product.ID)
 		return fmt.Errorf("ошибка при обновлении основной информации товара: %w", err)

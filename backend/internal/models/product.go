@@ -6,9 +6,9 @@ import (
 
 // Product представляет модель товара
 type Product struct {
-	ID            int64 `json:"id" db:"id"`
-	CategoryID    int64 `json:"category_id" db:"category_id"`
-	SubcategoryID int64 `json:"subcategory_id,omitempty" db:"subcategory_id"`
+	ID            int64  `json:"id" db:"id"`
+	CategoryID    int64  `json:"category_id" db:"category_id"`
+	SubcategoryID *int64 `json:"subcategory_id,omitempty" db:"subcategory_id"`
 	// Удаляем поле price из основной структуры
 	Images    []string  `json:"images" db:"-"` // Массив URL изображений
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
