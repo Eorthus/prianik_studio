@@ -541,7 +541,7 @@ onUnmounted(() => {
           >
             <source src="../assets/img/banner_video.mp4" type="video/mp4" />
             <img
-              src="../assets/img/engraving3.png"
+              src="../assets/img/engraving3.webp"
               alt="Мастерская"
               class="tw-object-cover tw-w-full tw-h-full"
             />
@@ -625,7 +625,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-16 tw-aspect-h-9 tw-block"
           >
             <img
-              src="../assets/img/3d_printing.png"
+              src="../assets/img/3d_printing.webp"
               alt="3D Печать"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -650,7 +650,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-16 tw-aspect-h-9 tw-block"
           >
             <img
-              src="../assets/img/engraving.png"
+              src="../assets/img/engraving.webp"
               alt="Выжигание"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -680,7 +680,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-4 tw-aspect-h-3 tw-block"
           >
             <img
-              src="../assets/img/wood.png"
+              src="../assets/img/wood.webp"
               alt="Дерево"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -705,7 +705,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-4 tw-aspect-h-3 tw-block"
           >
             <img
-              src="../assets/img/metal.png"
+              src="../assets/img/metal.webp"
               alt="Металл"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />
@@ -730,7 +730,7 @@ onUnmounted(() => {
             class="category-card tw-relative tw-overflow-hidden tw-shadow-md tw-aspect-w-4 tw-aspect-h-3 tw-block"
           >
             <img
-              src="../assets/img/glass.png"
+              src="../assets/img/glass.webp"
               alt="Другое"
               class="tw-w-full tw-h-full tw-object-cover tw-transition-transform tw-duration-500"
             />

@@ -40,17 +40,6 @@ type CORSConfig struct {
 	AllowedOrigins []string
 }
 
-// EmailConfig содержит настройки электронной почты
-type EmailConfig struct {
-	SMTPHost     string
-	SMTPPort     int
-	SMTPUsername string
-	SMTPPassword string
-	MailFrom     string
-	MailFromName string
-	CompanyEmail string
-}
-
 // SecurityConfig содержит настройки безопасности
 type SecurityConfig struct {
 	APIRateLimit int
@@ -63,7 +52,24 @@ type LoggingConfig struct {
 	Level string
 }
 
-// LoadConfig загружает настройки из .env файла
+// EmailConfig содержит настройки электронной почты
+type EmailConfig struct {
+	// Общие настройки
+	Provider     string // "smtp", "sendgrid", "mailgun"
+	MailFrom     string
+	MailFromName string
+	CompanyEmail string
+
+	// SMTP настройки (fallback)
+	SMTPHost     string
+	SMTPPort     int
+	SMTPUsername string
+	SMTPPassword string
+
+	// SendGrid настройки
+	SendGridAPIKey string
+}
+
 func LoadConfig() (Config, error) {
 	// Загрузка .env файла
 	err := godotenv.Load()
@@ -91,13 +97,20 @@ func LoadConfig() (Config, error) {
 			AllowedOrigins: strings.Split(getEnv("ALLOWED_ORIGINS", "http://localhost:3000"), ","),
 		},
 		Email: EmailConfig{
+			// Общие настройки
+			Provider:     getEnv("EMAIL_PROVIDER", "smtp"), // по умолчанию SMTP
+			MailFrom:     getEnv("MAIL_FROM", "no-reply@prianik.com"),
+			MailFromName: getEnv("MAIL_FROM_NAME", "Prianik Studio"),
+			CompanyEmail: getEnv("COMPANY_EMAIL", "info@prianik.com"),
+
+			// SMTP настройки (fallback)
 			SMTPHost:     getEnv("SMTP_HOST", ""),
 			SMTPPort:     getEnvAsInt("SMTP_PORT", 587),
 			SMTPUsername: getEnv("SMTP_USERNAME", ""),
 			SMTPPassword: getEnv("SMTP_PASSWORD", ""),
-			MailFrom:     getEnv("MAIL_FROM", "no-reply@example.com"),
-			MailFromName: getEnv("MAIL_FROM_NAME", "Creality Workshop"),
-			CompanyEmail: getEnv("COMPANY_EMAIL", "info@example.com"),
+
+			// SendGrid настройки
+			SendGridAPIKey: getEnv("SENDGRID_API_KEY", ""),
 		},
 		Security: SecurityConfig{
 			APIRateLimit: getEnvAsInt("API_RATE_LIMIT", 100),

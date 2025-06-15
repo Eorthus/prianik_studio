@@ -11,8 +11,8 @@ const { t } = useI18n();
         <!-- Юридическая информация -->
         <div class="tw-max-w-md">
           <h3 class="tw-text-lg tw-font-medium tw-mb-4 tw-text-gray-800">{{ $t('contacts.company_name') }}</h3>
-          <p class="tw-text-sm tw-text-gray-600 tw-mb-2">{{ $t('footer.legal_entity') }}</p>
-          <p class="tw-text-sm tw-text-gray-600 tw-mb-2">{{ $t('footer.legal_id') }}: 123456789012345</p>
+          <!-- <p class="tw-text-sm tw-text-gray-600 tw-mb-2">{{ $t('footer.legal_entity') }}</p>
+          <p class="tw-text-sm tw-text-gray-600 tw-mb-2">{{ $t('footer.legal_id') }}: 123456789012345</p> -->
           <p class="tw-text-sm tw-text-gray-600">{{ $t('footer.company') }} {{ new Date().getFullYear() }} {{ $t('footer.all_rights') }}</p>
         </div>
 

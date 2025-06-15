@@ -52,7 +52,20 @@ func main() {
 	repo := storage.NewPostgresRepository(db, log)
 
 	// Инициализируем отправитель email
-	emailSender := utils.NewGomailSender(cfg.Email, log)
+	var emailSender utils.Sender
+
+	// Проверяем, какой провайдер email использовать
+	switch cfg.Email.Provider {
+	case "sendgrid":
+		if cfg.Email.SendGridAPIKey != "" {
+			emailSender = utils.NewSendGridSender(cfg.Email, log)
+		} else {
+			log.Warn("SendGrid API ключ не найден, переключаемся на SMTP")
+			emailSender = utils.NewGomailSender(cfg.Email, log)
+		}
+	default:
+		emailSender = utils.NewGomailSender(cfg.Email, log)
+	}
 
 	// Инициализируем роутер
 	router := api.SetupRouter(repo, emailSender, &cfg, log)
