@@ -82,17 +82,14 @@ const initRecaptcha = () => {
     recaptchaId.value = window.grecaptcha.render(recaptchaContainer.value, {
       sitekey: siteKey,
       callback: (response: string) => {
-        console.log("reCAPTCHA v2 успешно пройдена");
         emit("verify", response);
         emit("close");
       },
       "expired-callback": () => {
-        console.log("reCAPTCHA истекла");
         emit("expire");
         error.value = "Время проверки истекло. Попробуйте снова.";
       },
       "error-callback": () => {
-        console.log("Ошибка reCAPTCHA");
         emit("error", "Ошибка reCAPTCHA");
         error.value = "Ошибка проверки. Попробуйте обновить страницу.";
       },
@@ -100,7 +97,6 @@ const initRecaptcha = () => {
       theme: "light"
     });
     
-    console.log("reCAPTCHA v2 инициализирована с ID:", recaptchaId.value);
   } catch (e) {
     console.error("Ошибка инициализации reCAPTCHA:", e);
     error.value = "Ошибка загрузки проверки безопасности";
@@ -123,7 +119,6 @@ const reset = () => {
 const loadRecaptchaScript = () => {
   // Проверяем, был ли скрипт уже загружен
   if (window.grecaptcha) {
-    console.log("reCAPTCHA уже загружена");
     initRecaptcha();
     return;
   }
@@ -146,7 +141,6 @@ const loadRecaptchaScript = () => {
 
   // Определяем глобальную функцию обратного вызова
   window.onRecaptchaLoadedV2 = () => {
-    console.log("reCAPTCHA v2 загружена, инициализация...");
     setTimeout(() => {
       initRecaptcha();
     }, 100);

@@ -194,9 +194,13 @@ const selectCategory = (categoryId: number | null) => {
 
 // Обработка выбора подкатегории
 const selectSubcategory = (subcategory) => {
-  selectedSubcategory.value = subcategory.id;
-  selectedCategory.value = subcategory.parent_id;
-
+  if (selectedSubcategory.value === subcategory.id || !subcategory) {
+    // Если выбрана та же категория - сбрасываем выбор
+    selectedSubcategory.value = null;
+  } else {
+    selectedSubcategory.value = subcategory?.id;
+    selectedCategory.value = subcategory?.parent_id;
+  }
   // Сбрасываем пагинацию при смене подкатегории
   currentPage.value = 1;
 
@@ -428,7 +432,8 @@ onMounted(() => {
                   @click="selectCategory(category.id)"
                   class="tw-w-full tw-text-left tw-py-2 tw-px-3 tw-rounded-md tw-transition-colors tw-duration-300 tw-font-medium hover:tw-opacity-70"
                   :class="{
-                    'tw-pointer-events-none tw-opacity-70': selectedCategory === category.id,
+                    'tw-pointer-events-none tw-opacity-70':
+                      selectedCategory === category.id,
                   }"
                 >
                   {{ category.name }}
@@ -571,7 +576,7 @@ onMounted(() => {
           </div>
 
           <!-- Состояние загрузки -->
-           <LoaderView v-if="loading"/>
+          <LoaderView v-if="loading" />
 
           <!-- Сообщение об ошибке -->
           <div
