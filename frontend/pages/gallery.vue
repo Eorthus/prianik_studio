@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed, nextTick, watch } from "vue";
 import ImageViewer from "~/components/card/ImageViewer.vue";
 import { useApiService } from "~/services/api";
 
@@ -44,6 +44,9 @@ const { locale } = useI18n();
 const galleryItems = ref([]);
 const lightboxVisible = ref(false);
 const currentLightboxId = ref(null);
+
+// Переменная для хранения observer
+let observer = null;
 
 // Индекс текущего изображения для лайтбокса
 const currentImageIndex = computed(() => {
@@ -60,6 +63,10 @@ const loadGalleryItems = async (categoryId = null) => {
     const response = await getGalleryItems(categoryId, locale.value);
     if (response.success && response.data) {
       galleryItems.value = response.data;
+      
+      // Инициализируем анимации после загрузки данных
+      await nextTick();
+      initScrollAnimations();
     } else {
       console.error("Ошибка загрузки галереи:", response.error);
     }
@@ -68,28 +75,17 @@ const loadGalleryItems = async (categoryId = null) => {
   }
 };
 
-// Открытие лайтбокса
-const openLightbox = (imageId) => {
-  currentLightboxId.value = imageId;
-  lightboxVisible.value = true;
-  document.body.style.overflow = "hidden";
-};
+// Функция инициализации анимаций скролла
+const initScrollAnimations = () => {
+  // Если observer уже существует, отключаем его
+  if (observer) {
+    observer.disconnect();
+  }
 
-// Закрытие лайтбокса
-const closeLightbox = () => {
-  lightboxVisible.value = false;
-  document.body.style.overflow = "";
-};
-
-onMounted(() => {
-  // Загружаем данные галереи
-  loadGalleryItems();
-
-  // Создаем Intersection Observer для анимации появления элементов
-  const observer = new IntersectionObserver(
+  // Создаем новый Intersection Observer
+  observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        // Если элемент видим
         if (entry.isIntersecting) {
           // Добавляем класс для анимации
           entry.target.classList.add("visible");
@@ -105,15 +101,46 @@ onMounted(() => {
     }
   );
 
-  // Наблюдаем за всеми элементами с классом fade-in-element
-  setTimeout(() => {
-    document.querySelectorAll(".fade-in-element").forEach((el) => {
-      observer.observe(el);
-    });
-  }, 100);
+  // Находим все элементы с классом fade-in-element и начинаем наблюдение
+  const elements = document.querySelectorAll(".fade-in-element");
+  elements.forEach((el) => {
+    observer.observe(el);
+  });
+};
+
+// Открытие лайтбокса
+const openLightbox = (imageId) => {
+  currentLightboxId.value = imageId;
+  lightboxVisible.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+// Закрытие лайтбокса
+const closeLightbox = () => {
+  lightboxVisible.value = false;
+  document.body.style.overflow = "";
+};
+
+// Отслеживание изменений в galleryItems для переинициализации анимаций
+watch(galleryItems, async () => {
+  if (galleryItems.value.length > 0) {
+    await nextTick();
+    initScrollAnimations();
+  }
+}, { deep: true });
+
+onMounted(async () => {
+  // Загружаем данные галереи
+  await loadGalleryItems();
 });
 
 onUnmounted(() => {
+  // Очищаем observer при размонтировании
+  if (observer) {
+    observer.disconnect();
+  }
+  
+  // Восстанавливаем скролл
   document.body.style.overflow = "";
 });
 </script>
