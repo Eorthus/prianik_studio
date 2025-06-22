@@ -171,3 +171,54 @@ func (r *PostgresRepository) CreateGalleryItem(ctx context.Context, item *models
 
 	return itemID, nil
 }
+
+func (r *PostgresRepository) DeleteGalleryItem(ctx context.Context, id int64) error {
+	// Начинаем транзакцию
+	tx, err := r.db.(*sqlx.DB).BeginTxx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("ошибка при начале транзакции: %w", err)
+	}
+
+	// Добавляем отложенную функцию для отката транзакции в случае ошибки
+	defer func() {
+		if err != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				r.logger.WithError(rollbackErr).Error("Ошибка при откате транзакции")
+			}
+		}
+	}()
+
+	// Сначала проверяем, существует ли элемент
+	var exists bool
+	checkQuery := "SELECT EXISTS(SELECT 1 FROM gallery_items WHERE id = $1)"
+	err = tx.QueryRowContext(ctx, checkQuery, id).Scan(&exists)
+	if err != nil {
+		return fmt.Errorf("ошибка при проверке существования элемента: %w", err)
+	}
+
+	if !exists {
+		return fmt.Errorf("gallery item not found")
+	}
+
+	// Удаляем переводы элемента галереи
+	deleteTranslationsQuery := "DELETE FROM gallery_item_translations WHERE gallery_item_id = $1"
+	_, err = tx.ExecContext(ctx, deleteTranslationsQuery, id)
+	if err != nil {
+		return fmt.Errorf("ошибка при удалении переводов элемента галереи: %w", err)
+	}
+
+	// Удаляем сам элемент галереи
+	deleteItemQuery := "DELETE FROM gallery_items WHERE id = $1"
+	_, err = tx.ExecContext(ctx, deleteItemQuery, id)
+	if err != nil {
+		return fmt.Errorf("ошибка при удалении элемента галереи: %w", err)
+	}
+
+	// Фиксируем транзакцию
+	if err = tx.Commit(); err != nil {
+		r.logger.WithError(err).Error("Ошибка при фиксации транзакции")
+		return fmt.Errorf("ошибка при фиксации транзакции: %w", err)
+	}
+
+	return nil
+}

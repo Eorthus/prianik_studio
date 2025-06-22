@@ -118,3 +118,32 @@ func (h *GalleryHandler) CreateGalleryItem(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, models.NewSuccessResponse(response))
 }
+
+func (h *GalleryHandler) DeleteGalleryItem(c *gin.Context) {
+	// Получаем ID элемента из URL
+	idParam := c.Param("id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.NewErrorResponse("Некорректный ID элемента"))
+		return
+	}
+
+	// Удаляем элемент из базы данных
+	err = h.repo.DeleteGalleryItem(c.Request.Context(), id)
+	if err != nil {
+		// Проверяем, не найден ли элемент
+		if err.Error() == "gallery item not found" {
+			c.JSON(http.StatusNotFound, models.NewErrorResponse("Элемент галереи не найден"))
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, models.NewErrorResponse("Ошибка при удалении элемента галереи"))
+		return
+	}
+
+	// Возвращаем успешный ответ
+	c.JSON(http.StatusOK, models.NewSuccessResponse(map[string]interface{}{
+		"message": "Элемент галереи успешно удален",
+		"id":      id,
+	}))
+}

@@ -59,6 +59,7 @@ func SetupRouter(
 		// Галерея
 		api.GET("/gallery", galleryHandler.GetGalleryItems)
 		api.POST("/gallery", galleryHandler.CreateGalleryItem)
+		api.DELETE("/gallery/:id", galleryHandler.DeleteGalleryItem)
 
 		// Заказы и формы
 		api.POST("/orders", orderHandler.CreateOrder)

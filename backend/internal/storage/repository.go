@@ -48,6 +48,7 @@ type ProductRepository interface {
 type GalleryRepository interface {
 	GetGalleryItems(ctx context.Context, filter models.GalleryFilter) (models.GalleryList, error)
 	CreateGalleryItem(ctx context.Context, item *models.GalleryItem) (int64, error)
+	DeleteGalleryItem(ctx context.Context, id int64) error
 }
 
 // OrderRepository интерфейс для работы с заказами
