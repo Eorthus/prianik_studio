@@ -474,7 +474,7 @@ onUnmounted(() => {
         <div class="tw-w-full tw-h-full tw-bg-gray-100">
           <img
             ref="bannerImage"
-            src="https://s3.stroi-news.ru/img/masterskaya-kartinki-1.jpg"
+            src="../assets/img/main_banner.webp"
             :alt="$t('home.title')"
             class="tw-w-full tw-h-full tw-object-cover"
           />
@@ -555,7 +555,7 @@ onUnmounted(() => {
                 to ${windowWidth > 768 ? 'right' : 'top'},
                 rgba(255, 255, 255, 1) 0%,
                 rgba(255, 255, 255, 0) 20%,
-                rgba(255, 255, 255, 0) 80%,
+                rgba(255, 255, 255, 0) 40%,
                 rgba(255, 255, 255, 1) 100%
               )`,
             }"

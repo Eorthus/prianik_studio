@@ -56,7 +56,7 @@ const { t } = useI18n();
           <h3 class="tw-text-lg tw-font-medium tw-mb-4 tw-text-gray-800">
             {{ $t("contacts.social_media") }}
           </h3>
-          <div class="tw-flex tw-gap-4">
+          <div class="tw-flex tw-gap-4 tw-justify-center md:tw-justify-start">
             <a
               :href="`https://wa.me/${$t('contacts.company_phone').replace(
                 /[^\d]/g,
