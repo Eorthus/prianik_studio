@@ -13,7 +13,7 @@ export default defineEventHandler((event) => {
   // Базовая CSP для защиты от XSS
   event.node.res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://s3.stroi-news.ru; connect-src 'self'"
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; object-src 'none'; base-uri 'self'"
   );
 
   // Разрешаем загрузку только по HTTPS (если сайт работает по HTTPS)
