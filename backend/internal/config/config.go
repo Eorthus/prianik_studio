@@ -42,9 +42,11 @@ type CORSConfig struct {
 
 // SecurityConfig содержит настройки безопасности
 type SecurityConfig struct {
-	APIRateLimit int
-	JWTSecret    string
-	EnableHTTPS  bool
+	APIRateLimit  int
+	JWTSecret     string
+	EnableHTTPS   bool
+	AdminUsername string
+	AdminPassword string
 }
 
 // LoggingConfig содержит настройки логирования
@@ -113,9 +115,11 @@ func LoadConfig() (Config, error) {
 			SendGridAPIKey: getEnv("SENDGRID_API_KEY", ""),
 		},
 		Security: SecurityConfig{
-			APIRateLimit: getEnvAsInt("API_RATE_LIMIT", 100),
-			JWTSecret:    getEnv("JWT_SECRET", "change_this_to_something_secure"),
-			EnableHTTPS:  getEnv("ENABLE_HTTPS", "false") == "true",
+			APIRateLimit:  getEnvAsInt("API_RATE_LIMIT", 100),
+			JWTSecret:     getEnv("JWT_SECRET", "change_this_to_something_secure"),
+			EnableHTTPS:   getEnv("ENABLE_HTTPS", "false") == "true",
+			AdminUsername: getEnv("ADMIN_USERNAME", "admin"),
+			AdminPassword: getEnv("ADMIN_PASSWORD", "defaultpassword"),
 		},
 		Logging: LoggingConfig{
 			Level: getEnv("LOG_LEVEL", "info"),

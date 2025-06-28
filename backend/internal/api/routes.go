@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/time/rate"
 
+	"pryanik_studio/internal/auth"
 	"pryanik_studio/internal/config"
 	"pryanik_studio/internal/security"
 	"pryanik_studio/internal/storage"
@@ -38,9 +39,11 @@ func SetupRouter(
 	limiter := security.NewIPRateLimiter(rate.Limit(cfg.Security.APIRateLimit), 20, logger)
 	router.Use(security.RateLimitMiddleware(limiter))
 
-	// csrf := security.NewCSRFProtection(cfg.Security.JWTSecret, logger)
-	// router.Use(security.CSRFMiddleware(csrf))
+	// Инициализируем JWT аутентификацию
+	jwtAuth := auth.NewJWTAuth(cfg.Security.JWTSecret, logger)
+
 	// Создаем обработчики
+	authHandler := NewAuthHandler(jwtAuth, logger)
 	productHandler := NewProductHandler(repo, logger)
 	galleryHandler := NewGalleryHandler(repo, logger)
 	orderHandler := NewOrderHandler(repo, repo, emailSender, logger)
@@ -48,22 +51,35 @@ func SetupRouter(
 	// Группа API
 	api := router.Group("/api")
 	{
-		// Товары и категории
+		// Аутентификация (открытые эндпоинты)
+		auth := api.Group("/auth")
+		{
+			auth.POST("/login", authHandler.Login)
+		}
+
+		// Публичные эндпоинты (без авторизации)
 		api.GET("/products", productHandler.GetProducts)
 		api.GET("/products/:id", productHandler.GetProductByID)
 		api.GET("/products/:id/related", productHandler.GetRelatedProducts)
 		api.GET("/categories", productHandler.GetCategories)
-		api.POST("/products", productHandler.CreateProduct)
-		api.PATCH("/products/:id", productHandler.UpdateProduct)
-
-		// Галерея
 		api.GET("/gallery", galleryHandler.GetGalleryItems)
-		api.POST("/gallery", galleryHandler.CreateGalleryItem)
-		api.DELETE("/gallery/:id", galleryHandler.DeleteGalleryItem)
 
-		// Заказы и формы
+		// Публичные формы
 		api.POST("/orders", orderHandler.CreateOrder)
 		api.POST("/contact", orderHandler.SubmitContactForm)
+
+		// Админские эндпоинты (требуют авторизации и роли admin)
+		admin := api.Group("/admin")
+		admin.Use(jwtAuth.Middleware(), jwtAuth.RequireAdmin())
+		{
+			// Управление товарами
+			admin.POST("/products", productHandler.CreateProduct)
+			admin.PATCH("/products/:id", productHandler.UpdateProduct)
+
+			// Управление галереей
+			admin.POST("/gallery", galleryHandler.CreateGalleryItem)
+			admin.DELETE("/gallery/:id", galleryHandler.DeleteGalleryItem)
+		}
 	}
 
 	return router
